@@ -1,0 +1,25 @@
+﻿===== Modifications à apporter ============
+
+- hasher les mots de passe dans la base de données (sha256) => Adrien
+
+- Utiliser prepared statement => Adrien
+
+- implementer une politique de mots de passe forts => Adrien
+
+- vérifier tous les inputs utilisateur côté serveur (Longeur des champs, types de données, sanitization code script/HTML) => Adrien
+
+- vérifier les output depuis la base de données (éviter execution de code non voulu injecté dans la base de données) => Adrien
+
+- mettre des identifiants plus complexes et qui ne se suivent pas (id random avec verif unicité) => 
+
+- vérifier les droits dans la base de données directement, pas dans un attribut de session => 
+
+- retirer tous les user input passés directement dans une fonction => 
+
+- changement de mot de passe verifié => 
+
+- traiter les erreurs sql avec redirection ou bien message erreur pour utilisateur a double =>
+
+- implementer un nombre de tentatives d'essai de mot de passe dans un temps donné ou bien desactivation du compte (reactivation par l'admin) =>
+
+- protection CSRF (token d'authentification des requetes) => 
