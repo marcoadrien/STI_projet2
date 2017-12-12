@@ -1,5 +1,7 @@
 ﻿===== Modifications à apporter ============
 
+-expiration de session?
+
 - hasher les mots de passe dans la base de données (sha256) => Adrien
 
 - Utiliser prepared statement => Adrien
