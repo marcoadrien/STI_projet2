@@ -2,6 +2,8 @@
 
 -expiration de session?
 
+- virer les champs required => Adrien
+
 - hasher les mots de passe dans la base de données (sha256) => Adrien
 
 - Utiliser prepared statement => Adrien
