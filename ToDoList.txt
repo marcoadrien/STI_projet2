@@ -1,8 +1,14 @@
 ﻿===== Modifications à apporter ============
 
+-expiration de session?
+
+- dangereux d avoir un compte admin qui peux tout faire. S'il est entre de mauvaises mains, c'est la catastrophe! Cependant, il faudrait recanger la structure de l'application qui a été imposée si l'on veut remédier à ce problème odnc pas possible ici.
+
+- virer les champs required => Adrien
+
 - hasher les mots de passe dans la base de données (sha256) => Adrien
 
-- Utiliser prepared statement => Adrien
+- Utiliser prepared statement (injections sql????)=> Adrien
 
 - implementer une politique de mots de passe forts => Adrien
 
