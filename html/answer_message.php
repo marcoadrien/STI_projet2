@@ -14,7 +14,11 @@ session_start();
 //if someone try to access directly this page without logging (it means there are empty datas), we redirect
 if(empty($_POST['answer_message'])) {
 
-	if($_SESSION['loggedin']){
+	if($_SESSION['from_answer_message_form']){
+		//it is not the first time we arrived here because there is a missing value
+		echo "Complétez les champs svp!";
+	}
+	elseif($_SESSION['loggedin']){
 		header('Location: userorientation.php');
 		Exit;
 	}
@@ -25,6 +29,9 @@ if(empty($_POST['answer_message'])) {
 		}
 	}
 }
+
+//if we stay on this page, we indicate it for the sending.php
+$_SESSION['from_answer_message_form'] = true;
 
 
 ?>

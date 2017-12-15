@@ -16,6 +16,17 @@ if(empty($_POST['create'])) {
 }
 //otherwise we create the account
 else{
+	//if one of the values is missing, we redirect again to the form
+	//we will put explicit messages if we have time at the end of he project
+	if(empty($_POST['login_field']) ||
+	empty($_POST['role_field']) || 
+	empty($_POST['pwd_field']) || 
+	empty($_POST['activity_field'])){
+		
+		$_SESSION['do_again_creation_form'] = true;
+		header("Location: create_account.php");
+		Exit;
+	}
 
 
 	// Set default timezone

@@ -10,7 +10,13 @@ session_start();
 
 
 //if someone try to access directly this page without logging (it means there are empty datas), we redirect
-if(empty($_POST['modify_account'])) {
+
+if($_SESSION['get_id_to_modify_again']){
+	//reset
+	$_SESSION['get_id_to_modify_again'] = false;
+	echo "Il faut remplir tous les champs pour les deux étapes!";
+}
+elseif(empty($_POST['modify_account'])) {
 	
 	header("Location: index.php");
 	Exit;	
@@ -25,7 +31,7 @@ if(empty($_POST['modify_account'])) {
 
 
 <form method="post" action="modify_account_steptwo.php">
-<fieldset><legend>login à modifier: </legend><input type="text" name="login_field" required/></fieldset>
+<fieldset><legend>login à modifier: </legend><input type="text" name="login_field"/></fieldset>
 <input type="submit" name="modify" value="modifier"/>
 </form>
 

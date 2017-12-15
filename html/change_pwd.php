@@ -10,8 +10,13 @@ session_start();
 
 
 //if someone try to access directly this page without logging (it means there are empty datas), we redirect
-if(empty($_POST['change_pwd'])) {
-
+if($_SESSION['change_again_pwd']){
+	//we reset the value and stay on this page
+	$_SESSION['change_again_pwd'] = false;
+	echo "Il faut saisir un mot de passe!";
+}
+elseif(empty($_POST['change_pwd'])) {
+	//redirection, not allowed to be on this page
 	header("Location: index.php");
 	Exit;
 	
@@ -25,7 +30,7 @@ if(empty($_POST['change_pwd'])) {
 
 
 <form method="post" action="insert_pwd_changed.php">
-<fieldset><legend>Nouveau mot de passe : </legend><input type="password" name="new_pwd" required/></fieldset>
+<fieldset><legend>Nouveau mot de passe : </legend><input type="password" name="new_pwd"/></fieldset>
 <input type="submit" name="send" value="appliquer changement"/>
 </form>
 

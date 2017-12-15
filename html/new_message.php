@@ -10,8 +10,14 @@ session_start();
 
 
 //if someone try to access directly this page without logging (it means there are empty datas), we redirect
-if(empty($_POST['new_message'])) {
-
+if($_SESSION['write_again_message']){
+	//we are allowed to stay on this page because me have made a bad input
+	//reset
+	$_SESSION['write_again_message'] = false;
+	echo "Il faut saisir un destinataire!";
+}
+elseif(empty($_POST['new_message'])) {
+	//we are not allowed to stay on this page
 	header("Location: index.php");
 	Exit;
 	
@@ -24,8 +30,8 @@ if(empty($_POST['new_message'])) {
 
 
 
-<form method="post" action="sending.php">
-<fieldset><legend>Destinataire : </legend><input type="text" name="destinataire" required/></fieldset>
+<form method="post" action="mail_receptor_verification.php">
+<fieldset><legend>Destinataire : </legend><input type="text" name="destinataire"/></fieldset>
 <fieldset><legend>Sujet : </legend><input type="text" name="sujet"/></fieldset>
 <fieldset><legend>Message : </legend><input  style = "width:100%;" type="text" name="message"/></fieldset>
 <input type="submit" name="send" value="envoyer"/>

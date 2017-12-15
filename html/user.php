@@ -18,6 +18,11 @@ $(document).ready(function(){
 <?php
 session_start();
 
+//if the pwd must be changed again
+if($_SESSION['change_again_pwd']){
+	header("Location: change_pwd.php");
+	Exit;
+}
 
 //if the user is already connected but try to access this page without beeing admin
 if($_SESSION['admin'] != "user"){

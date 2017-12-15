@@ -17,6 +17,13 @@ $(document).ready(function(){
 <?php
 session_start();
 
+
+//if the pwd must be changed again
+if($_SESSION['change_again_pwd']){
+	header("Location: change_pwd.php");
+	Exit;
+}
+
 //if the user is already connected but try to access this page without beeing admin
 if($_SESSION['admin'] != "admin"){
 	header("Location: userorientation.php");
@@ -28,7 +35,6 @@ if($_SESSION['admin'] != "admin"){
 if((empty($_POST['login']) || empty($_POST['motdepasse'])) && empty($_SESSION['loggedin'])) {
 	$_SESSION['loggedin'] = false;
 	header('Location: index.php');
-	//echo "redirect to index.php";
 	Exit;
 }
 

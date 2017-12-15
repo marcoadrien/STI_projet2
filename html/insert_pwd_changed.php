@@ -10,6 +10,8 @@ session_start();
 if(empty($_POST['new_pwd'])) {
 
 	if($_SESSION['loggedin']){
+		//we are going to be redirected directly to the change of password again
+		$_SESSION['change_again_pwd'] = true;
 		header('Location: userorientation.php');
 		Exit;
 	}
@@ -55,16 +57,17 @@ else{
 
 		// Close file db connection
 		$file_db = null;
-		
+	
 		header('Location: userorientation.php');
 
 
-		
+	
 	}
 	catch(PDOException $e) {
 	// Print PDOException message
 	echo $e->getMessage();
 	}  
+	
 
 
 }
