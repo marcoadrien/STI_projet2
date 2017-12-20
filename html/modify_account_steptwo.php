@@ -80,7 +80,7 @@ else{
 			echo "	<h2>$login:</h2>
 				<form method='post' action='modifying.php'>
 				<fieldset><legend>Mot de passe : </legend>
-					<input type='password' name='pwd_field' value='$mdp'/>
+					<input name='pwd_field'/>
 				</fieldset>
 				<fieldset><legend>Validité : </legend>";
 

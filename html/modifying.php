@@ -46,6 +46,8 @@ else{
 			* modify account in database
 			**************************************/
 
+			$_POST['pwd_field'] = hash('ripemd160', $_POST['pwd_field']);
+			
 			$file_db->exec("UPDATE personnes SET admin = '{$_POST['role_field']}', mdp = '{$_POST['pwd_field']}', actif = '{$_POST['activity_field']}' WHERE login ='{$_SESSION['login_field']}'");
 
 			/**************************************

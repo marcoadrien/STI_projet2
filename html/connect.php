@@ -53,9 +53,9 @@ else{
 			$actiftocompare = $row['actif'];
 			$admintocompare = $row['admin'];
 		}
-	
 		//accepted, good loggin
-		if(($mdptocompare == $motdepasse) && !empty($motdepasse) && ($actiftocompare == $actif)){
+		$hashed_input = hash('ripemd160', $motdepasse);
+		if(($hashed_input == $mdptocompare) && !empty($motdepasse) && ($actiftocompare == $actif)){
 			$_SESSION['loggedin'] = true;
 			$_SESSION['logginfail'] = false;
 			//we want to know if it is an admin or not
