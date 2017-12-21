@@ -38,6 +38,8 @@ else{
 
 		// Create (connect to) SQLite database in file
 		$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+		//disable emulated prepared statements to get real prepared statements
+		$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		// Set errormode to exceptions
 		$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
 
@@ -45,7 +47,11 @@ else{
 		/**************************************
 		* give authorisation or not
 		**************************************/
-		$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$login'");
+		//$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$login'");
+
+		//prepared statement against sql injections
+		$result = $file_db->prepare('SELECT * FROM personnes WHERE login = :login');
+		$result->execute(array('login' => $login));
 		
 		//we get the good values that match in the DB
 		foreach($result as $row) {			
@@ -54,7 +60,7 @@ else{
 			$admintocompare = $row['admin'];
 		}
 		//accepted, good loggin
-		$hashed_input = hash('ripemd160', $motdepasse);
+		$hashed_input = hash('sha256', $motdepasse);
 		if(($hashed_input == $mdptocompare) && !empty($motdepasse) && ($actiftocompare == $actif)){
 			$_SESSION['loggedin'] = true;
 			$_SESSION['logginfail'] = false;

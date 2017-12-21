@@ -28,7 +28,7 @@ else{
 	//we save the login name
 	$id = $_SESSION['username'];
 	//we save the new pwd
-	$new_pwd = hash('ripemd160', $_POST['new_pwd']);
+	$new_pwd = hash('sha256', $_POST['new_pwd']);
 
 	// Set default timezone
   	date_default_timezone_set('UTC');

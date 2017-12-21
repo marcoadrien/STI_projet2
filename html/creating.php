@@ -48,7 +48,7 @@ else{
 		* write account in database
 		**************************************/
 
-		$_POST['pwd_field'] = hash('ripemd160', $_POST['pwd_field']);
+		$_POST['pwd_field'] = hash('sha256', $_POST['pwd_field']);
 
 
 		$file_db->exec("INSERT INTO personnes (login, admin, mdp, actif) 
