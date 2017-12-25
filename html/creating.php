@@ -29,6 +29,15 @@ else{
 	}
 
 
+
+	//we remove all the special characters to prevent from script injections
+	$_POST['login_field'] = strip_tags($_POST['login_field']);
+	$_POST['role_field'] = strip_tags($_POST['role_field']);
+	$_POST['pwd_field'] = strip_tags($_POST['pwd_field']);
+	$_POST['activity_field'] = strip_tags($_POST['activity_field']);
+
+
+
 	// Set default timezone
   	date_default_timezone_set('UTC');
  
