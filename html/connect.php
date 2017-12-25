@@ -26,7 +26,6 @@ else{
 	$motdepasse = $_POST['motdepasse'];
 	$actif = "actif";
 	$admin = "admin";
-
 	// Set default timezone
   	date_default_timezone_set('UTC');
  
@@ -59,6 +58,14 @@ else{
 			$actiftocompare = $row['actif'];
 			$admintocompare = $row['admin'];
 		}
+		// add by Dany
+		if($_SESSION['number'] > 3 && $actiftocompare == $actif && $admintocompare != $admin){
+			$_SESSION['timestamp'] = true;
+			$file_db->exec("UPDATE personnes SET actif='inactif' WHERE login = '$login'");
+			
+		}
+
+
 		//accepted, good loggin
 		$hashed_input = hash('sha256', $motdepasse);
 		if(($hashed_input == $mdptocompare) && !empty($motdepasse) && ($actiftocompare == $actif)){

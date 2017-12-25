@@ -14,13 +14,26 @@ if($_SESSION['loggedin']){
 	header('Location: userorientation.php');
 }
 
+// add by Dany
+if(!isset($_SESSION['number'])){
+	$_SESSION['number'] = 0;
+}
+
+// add by Dany
+if($_SESSION['timestamp']){
+	
+	echo '<script type="text/javascript">alert("Votre compte est desactivé. Veuillez contacter ladministrateur!")</script>';
+	session_destroy();
+}
+
+
 //if bad loggin, then show alert message and destroy the sessions
 if(isset($_SESSION['logginfail']) && $_SESSION['logginfail']){
-
-	if(session_destroy()){
-		echo '<script type="text/javascript">alert("loggin refusé!")</script>';	
-	}
+	//add by Dany
+	$_SESSION['number']++;
+	echo '<script type="text/javascript">alert("Bad login!")</script>';	
 }
+
 
 
 //default session variables:
