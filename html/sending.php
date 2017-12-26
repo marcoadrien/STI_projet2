@@ -26,6 +26,8 @@ if($_SESSION['from_new_message_form']){
 
 		// Create (connect to) SQLite database in file
 		$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+		//disable emulated prepared statements to get real prepared statements
+		$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		// Set errormode to exceptions
 		$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
 
@@ -34,8 +36,12 @@ if($_SESSION['from_new_message_form']){
 		* write message in database
 		**************************************/
 
-		$file_db->exec("INSERT INTO messages (receptor, expeditor, subject, message) 
-                            VALUES ('{$_SESSION['destinataire']}', '{$_SESSION['username']}', '{$_SESSION['sujet']}', '{$_SESSION['message']}')");
+
+		//prepared statement against sql injections
+		$result = $file_db->prepare('INSERT INTO messages (receptor, expeditor, subject, message) 
+                            VALUES (:destinataire, :username, :sujet, :message)');
+		$result->execute(array('destinataire' => $_SESSION['destinataire'], 'username' => $_SESSION['username'], 'sujet' => $_SESSION['sujet'], 'message' => $_SESSION['message']));
+
 
 		/**************************************
 		* Close connections                *
@@ -78,6 +84,11 @@ else{
 	//reset because we are sending now
 	$_SESSION['from_answer_message_form'] = false;
 
+	//we remove all the special characters to prevent from script injections
+	$_POST['destinataire'] = strip_tags($_POST['destinataire']);
+	$_POST['message'] = strip_tags($_POST['message']);
+	$_POST['sujet'] = strip_tags($_POST['sujet']);
+
 	$receptor = $_POST['destinataire'];	
 
 	//we set the receptor of the message if the sending is 
@@ -97,16 +108,22 @@ else{
 
 		// Create (connect to) SQLite database in file
 		$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+		//disable emulated prepared statements to get real prepared statements
+		$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 		// Set errormode to exceptions
-		$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+		$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
 		/**************************************
 		* write message in database
 		**************************************/
 
-		$file_db->exec("INSERT INTO messages (receptor, expeditor, subject, message) 
-                            VALUES ('{$receptor}', '{$_SESSION['username']}', '{$_POST['sujet']}', '{$_POST['message']}')");
+
+		//prepared statement against sql injections
+		$result = $file_db->prepare('INSERT INTO messages (receptor, expeditor, subject, message) 
+                            VALUES (:destinataire, :username, :sujet, :message)');
+		$result->execute(array('destinataire' => $receptor, 'username' => $_SESSION['username'], 'sujet' => $_POST['sujet'], 'message' => $_POST['message']));
+
 
 		/**************************************
 		* Close connections                *

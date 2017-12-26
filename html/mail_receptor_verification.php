@@ -19,6 +19,11 @@ else{
 	//if there is a value for the receptor of the mail, we send the message
 	if(!empty($_POST['destinataire'])){
 
+		//we remove all the special characters to prevent from script injections
+		$_POST['destinataire'] = strip_tags($_POST['destinataire']);
+		$_POST['sujet'] = strip_tags($_POST['sujet']);
+		$_POST['message'] = strip_tags($_POST['message']);
+
 		//indicates we arrived from the new message form
 		$_SESSION['from_new_message_form'] = true;
 		$_SESSION['destinataire'] = $_POST['destinataire'];

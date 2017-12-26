@@ -22,7 +22,7 @@ if(!isset($_SESSION['number'])){
 // add by Dany
 if($_SESSION['timestamp']){
 	
-	echo '<script type="text/javascript">alert("Votre compte est desactivé. Veuillez contacter ladministrateur!")</script>';
+	echo '<script type="text/javascript">alert("Votre compte est désactivé. Veuillez contacter un administrateur!")</script>';
 	session_destroy();
 }
 
@@ -31,7 +31,7 @@ if($_SESSION['timestamp']){
 if(isset($_SESSION['logginfail']) && $_SESSION['logginfail']){
 	//add by Dany
 	$_SESSION['number']++;
-	echo '<script type="text/javascript">alert("Bad login!")</script>';	
+	echo '<script type="text/javascript">alert("Login refusé!")</script>';	
 }
 
 

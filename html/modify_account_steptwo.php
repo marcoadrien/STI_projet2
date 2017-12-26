@@ -17,7 +17,14 @@ if(empty($_POST['modify'])) {
 }
 //otherwise we get the login values to modify
 else{
+
+
+	//we remove all the special characters to prevent from script injections
+	$_POST['login_field'] = strip_tags($_POST['login_field']);
+	$_POST['pwd_field'] = strip_tags($_POST['pwd_field']);		
+
 	$login = $_POST['login_field'];
+	$pwd = $_POST['pwd_field'];
 	$_SESSION['login_field'] = $login;
 	
 	//if the input value is missing
@@ -40,9 +47,10 @@ else{
 
 			// Create (connect to) SQLite database in file
 			$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+			//disable emulated prepared statements to get real prepared statements
+			$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			// Set errormode to exceptions
-			$file_db->setAttribute(PDO::ATTR_ERRMODE, 
-				    	PDO::ERRMODE_EXCEPTION); 
+			$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
 
 
@@ -52,8 +60,15 @@ else{
 			* get values of the account           *
 			**************************************/
 
+			$hashed_input = hash('sha256', $pwd);
 
-			$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$login'");
+
+			//prepared statement against sql injections
+			$result = $file_db->prepare('SELECT * FROM personnes WHERE login = :login AND mdp = :mdp');
+			$result->execute(array('login' => $login, 'mdp' => $hashed_input));
+		
+
+			//$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$login' AND mdp = '$hashed_input'");
 
 			foreach($result as $row) {
 				$admin = $row['admin'];
@@ -67,10 +82,10 @@ else{
 			* set the form with those values      *
 			**************************************/
 
-			//if the login to modify does not exist
-			if(empty($mdp)){
+			//if bad loggin
+			if($hashed_input != $mdp){
 
-				echo "	<h2 style='color:red'>Le login n'existe pas!</h2>
+				echo "	<h2 style='color:red'>accès refusé!</h2>
 					<form method='post' action='modify_account.php'>
 					<input type='submit' name='modify_account' value='recommencer'/>
 					</form>";

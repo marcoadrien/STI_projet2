@@ -55,14 +55,22 @@ try {
 
 	// Create (connect to) SQLite database in file
 	$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+	//disable emulated prepared statements to get real prepared statements
+	$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	// Set errormode to exceptions
-	$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+	$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
 
 	/**************************************
 	* print messages
 	**************************************/
-	$result =  $file_db->query("SELECT * FROM messages WHERE receptor = '$login' ORDER BY date ASC");
+
+	//prepared statement against sql injections
+	$result = $file_db->prepare('SELECT * FROM messages WHERE receptor = :login ORDER BY date ASC');
+	$result->execute(array('login' => $login));
+
+
+	//$result =  $file_db->query("SELECT * FROM messages WHERE receptor = '$login' ORDER BY date ASC");
 
 	echo "<table style = 'border-spacing: 20px;width:100%'><tr><td>Actions</td><td>Date</td><td>Expéditeur</td><td>Sujet</td></tr>";
 	

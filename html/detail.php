@@ -26,6 +26,9 @@ if(empty($_GET['id_message'])) {
 }
 
 
+//we remove all the special characters to prevent from script injections
+$_GET['id_message'] = strip_tags($_GET['id_message']);
+
 //we get the message id to display
 $_SESSION['idmsg'] = $_GET['id_message'];
 $id = $_SESSION['idmsg'];
@@ -43,15 +46,21 @@ try {
 
 	// Create (connect to) SQLite database in file
 	$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+	//disable emulated prepared statements to get real prepared statements
+	$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	// Set errormode to exceptions
-	$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+	$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
 
 	/**************************************
 	* print message
 	**************************************/
 
-	$result =  $file_db->query("SELECT * FROM messages WHERE message_id = '$id'");
+	//$result =  $file_db->query("SELECT * FROM messages WHERE message_id = '$id'");
+
+	//prepared statement against sql injections
+	$result = $file_db->prepare('SELECT * FROM messages WHERE message_id = :id');
+	$result->execute(array('id' => $id));
 
 	echo "<table style = 'border-spacing: 20px;width:100%'><tr><td>Date</td><td>Expéditeur</td><td>Sujet</td><td>Message</td></tr>";
 	

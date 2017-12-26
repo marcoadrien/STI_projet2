@@ -27,43 +27,66 @@ else{
 	//otherwise, we do the job
 	else{
 
-		// Set default timezone
-	  	date_default_timezone_set('UTC');
-	 
-		try {
-			/**************************************
-			* Create databases and                *
-			* open connections                    *
-			**************************************/
 
-			// Create (connect to) SQLite database in file
-			$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
-			// Set errormode to exceptions
-			$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+		//we remove all the special characters to prevent from script injections
+		$_POST['role_field'] = strip_tags($_POST['role_field']);
+		$_POST['pwd_field'] = strip_tags($_POST['pwd_field']);
+		$_POST['activity_field'] = strip_tags($_POST['activity_field']);
+		$_POST['login_field'] = strip_tags($_POST['login_field']);
 
 
-			/**************************************
-			* modify account in database
-			**************************************/
+		//if the password is fine, we modify the account		
+		if(trim($_POST['pwd_field'], 'a..z') != '' && trim($_POST['pwd_field'], 'A..Z') != '' && strlen($_POST['pwd_field']) >= 8 && preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $_POST['pwd_field']) && strtolower($_POST['pwd_field']) != $_POST['pwd_field']){
 
-			$_POST['pwd_field'] = hash('sha256', $_POST['pwd_field']);
+			// Set default timezone
+		  	date_default_timezone_set('UTC');
+		 
+			try {
+				/**************************************
+				* Create databases and                *
+				* open connections                    *
+				**************************************/
+				// Create (connect to) SQLite database in file
+				$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+				//disable emulated prepared statements to get real prepared statements
+				$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+				// Set errormode to exceptions
+				$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
+
+
+				/**************************************
+				* modify account in database
+				**************************************/
+
+				$_POST['pwd_field'] = hash('sha256', $_POST['pwd_field']);
+
+				//prepared statement against sql injections
+				$result = $file_db->prepare('UPDATE personnes SET admin = :role_field, mdp = :pwd_field, actif = :activity_field WHERE login = :login_field');
+				$result->execute(array('role_field' => $_POST['role_field'], 'pwd_field' => $_POST['pwd_field'], 'activity_field' => $_POST['activity_field'], 'login_field' => $_SESSION['login_field']));
 			
-			$file_db->exec("UPDATE personnes SET admin = '{$_POST['role_field']}', mdp = '{$_POST['pwd_field']}', actif = '{$_POST['activity_field']}' WHERE login ='{$_SESSION['login_field']}'");
+				//$file_db->exec("UPDATE personnes SET admin = '{$_POST['role_field']}', mdp = '{$_POST['pwd_field']}', actif = '{$_POST['activity_field']}' WHERE login ='{$_SESSION['login_field']}'");
 
-			/**************************************
-			* Close connections                *
-			**************************************/
+				/**************************************
+				* Close connections                *
+				**************************************/
 
-			// Close file db connection
-			$file_db = null;
+				// Close file db connection
+				$file_db = null;
 		
-			header('Location: userorientation.php');
+				header('Location: userorientation.php');
 
 		
+			}
+			catch(PDOException $e) {
+				// Print PDOException message
+				echo $e->getMessage();
+			}
 		}
-		catch(PDOException $e) {
-			// Print PDOException message
-			echo $e->getMessage();
+		//otherwise, the password must be better
+		else{
+			$_SESSION['get_id_to_modify_again'] = true;
+			header("Location: modify_account.php");
+			Exit;
 		}
 	}  
 

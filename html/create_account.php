@@ -14,7 +14,7 @@ session_start();
 if($_SESSION['do_again_creation_form']){
 	//reset
 	$_SESSION['do_again_creation_form'] = false;
-	echo "Tous les champs doivent être remplis!";
+	echo "Tous les champs doivent être remplis et le mot de passe doit au moins comporter 8 caractères avec majuscules et minuscules et des chiffres!";
 	//we stay on this page!
 }
 elseif(empty($_POST['create_account'])) {

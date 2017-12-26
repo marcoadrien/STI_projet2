@@ -14,7 +14,7 @@ session_start();
 if($_SESSION['get_id_to_modify_again']){
 	//reset
 	$_SESSION['get_id_to_modify_again'] = false;
-	echo "Il faut remplir tous les champs pour les deux étapes!";
+	echo "Il faut remplir tous les champs pour les deux étapes et le mot de passe doit être suffisament fort (8 caractères majuscules et minuscules avec chiffres)!";
 }
 elseif(empty($_POST['modify_account'])) {
 	
@@ -32,6 +32,7 @@ elseif(empty($_POST['modify_account'])) {
 
 <form method="post" action="modify_account_steptwo.php">
 <fieldset><legend>login à modifier: </legend><input type="text" name="login_field"/></fieldset>
+<fieldset><legend>mot de passe du compte à modifier: </legend><input type="password" name="pwd_field"/></fieldset>
 <input type="submit" name="modify" value="modifier"/>
 </form>
 

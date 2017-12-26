@@ -22,10 +22,16 @@ if(empty($_POST['login']) || empty($_POST['motdepasse'])) {
 //otherwise we analyse the data connection to give acces or not
 else{
 
+	//we remove all the special characters to prevent from script injections
+	$_POST['login'] = strip_tags($_POST['login']);
+	$_POST['motdepasse'] = strip_tags($_POST['motdepasse']);
+
 	$login = $_POST['login'];
 	$motdepasse = $_POST['motdepasse'];
 	$actif = "actif";
 	$admin = "admin";
+
+
 	// Set default timezone
   	date_default_timezone_set('UTC');
  
@@ -46,7 +52,6 @@ else{
 		/**************************************
 		* give authorisation or not
 		**************************************/
-		//$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$login'");
 
 		//prepared statement against sql injections
 		$result = $file_db->prepare('SELECT * FROM personnes WHERE login = :login');
@@ -59,9 +64,11 @@ else{
 			$admintocompare = $row['admin'];
 		}
 		// add by Dany
-		if($_SESSION['number'] > 3 && $actiftocompare == $actif && $admintocompare != $admin){
+		if($_SESSION['number'] > 2 && $actiftocompare == $actif){
 			$_SESSION['timestamp'] = true;
-			$file_db->exec("UPDATE personnes SET actif='inactif' WHERE login = '$login'");
+			$blocked = 'inactif';
+			$result = $file_db->prepare('UPDATE personnes SET actif = :inactif WHERE login = :login');
+			$result->execute(array('login' => $login, 'inactif' => $blocked));
 			
 		}
 

@@ -13,7 +13,7 @@ session_start();
 if($_SESSION['change_again_pwd']){
 	//we reset the value and stay on this page
 	$_SESSION['change_again_pwd'] = false;
-	echo "Il faut saisir un mot de passe!";
+	echo "Il faut remplir tous les champs et mettre le bon ancien mot de passe!";
 }
 elseif(empty($_POST['change_pwd'])) {
 	//redirection, not allowed to be on this page
@@ -30,6 +30,7 @@ elseif(empty($_POST['change_pwd'])) {
 
 
 <form method="post" action="insert_pwd_changed.php">
+<fieldset><legend>Ancien mot de passe : </legend><input type="password" name="old_pwd"/></fieldset>
 <fieldset><legend>Nouveau mot de passe : </legend><input type="password" name="new_pwd"/></fieldset>
 <input type="submit" name="send" value="appliquer changement"/>
 </form>
