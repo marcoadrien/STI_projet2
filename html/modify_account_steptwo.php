@@ -94,6 +94,9 @@ else{
 
 			echo "	<h2>$login:</h2>
 				<form method='post' action='modifying.php'>
+				<fieldset><legend>login : </legend>
+					<input name='new_login_field' value = $login />
+				</fieldset>
 				<fieldset><legend>Mot de passe : </legend>
 					<input name='pwd_field'/>
 				</fieldset>
