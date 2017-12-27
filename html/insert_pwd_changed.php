@@ -38,74 +38,87 @@ else{
 	//we get the old pwd
 	$old_pwd = hash('sha256', $_POST['old_pwd']);
 
-	// Set default timezone
-  	date_default_timezone_set('UTC');
- 
-	try {
-		/**************************************
-		* Create databases and                *
-		* open connections                    *
-		**************************************/
 
-		// Create (connect to) SQLite database in file
-		$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
-		//disable emulated prepared statements to get real prepared statements
-		$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		// Set errormode to exceptions
-		$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+	//if the password is fine, we modify the account		
+	if(trim($_POST['new_pwd'], 'a..z') != '' && trim($_POST['new_pwd'], 'A..Z') != '' && strlen($_POST['new_pwd']) >= 8 && preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $_POST['new_pwd']) && strtolower($_POST['new_pwd']) != $_POST['new_pwd']){
+
+		// Set default timezone
+	  	date_default_timezone_set('UTC');
+	 
+		try {
+			/**************************************
+			* Create databases and                *
+			* open connections                    *
+			**************************************/
+
+			// Create (connect to) SQLite database in file
+			$file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
+			//disable emulated prepared statements to get real prepared statements
+			$file_db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+			// Set errormode to exceptions
+			$file_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
 	
-		/**************************************
-		* get values of the account           *
-		**************************************/
-
-		//prepared statement against sql injections
-		$result = $file_db->prepare('SELECT * FROM personnes WHERE login = :id AND mdp = :old_pwd');
-		$result->execute(array('id' => $id, 'old_pwd' => $old_pwd));
-
-		//$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$id' AND mdp = '$old_pwd'");
-
-		foreach($result as $row) {
-			$admin = $row['admin'];
-			$mdp = $row['mdp'];
-			$actif = $row['actif'];
-		}
-		
-		//if bad loggin
-		if($old_pwd != $mdp){
-			$_SESSION['change_again_pwd'] = true;
-			header('Location: userorientation.php');
-			Exit;
-		}
-		else{
-
 			/**************************************
-			* change pwd in database
+			* get values of the account           *
 			**************************************/
 
 			//prepared statement against sql injections
-			$result = $file_db->prepare('UPDATE personnes SET mdp = :new_pwd WHERE login = :id');
-			$result->execute(array('new_pwd' => $new_pwd, 'id' => $id));
+			$result = $file_db->prepare('SELECT * FROM personnes WHERE login = :id AND mdp = :old_pwd');
+			$result->execute(array('id' => $id, 'old_pwd' => $old_pwd));
 
-			//$file_db->exec("UPDATE personnes SET mdp = '$new_pwd' WHERE login = '$id'");
+			//$result =  $file_db->query("SELECT * FROM personnes WHERE login = '$id' AND mdp = '$old_pwd'");
 
-			/**************************************
-			* Close connections                *
-			**************************************/
+			foreach($result as $row) {
+				$admin = $row['admin'];
+				$mdp = $row['mdp'];
+				$actif = $row['actif'];
+			}
+		
+			//if bad loggin
+			if($old_pwd != $mdp){
+				$_SESSION['change_again_pwd'] = true;
+				header('Location: userorientation.php');
+				Exit;
+			}
+			else{
 
-			// Close file db connection
-			$file_db = null;
+				/**************************************
+				* change pwd in database
+				**************************************/
+
+				//prepared statement against sql injections
+				$result = $file_db->prepare('UPDATE personnes SET mdp = :new_pwd WHERE login = :id');
+				$result->execute(array('new_pwd' => $new_pwd, 'id' => $id));
+
+				//$file_db->exec("UPDATE personnes SET mdp = '$new_pwd' WHERE login = '$id'");
+
+				/**************************************
+				* Close connections                *
+				**************************************/
+
+				// Close file db connection
+				$file_db = null;
 	
-			header('Location: userorientation.php');
+				header('Location: userorientation.php');
+			}
+
+	
 		}
-
-	
+		catch(PDOException $e) {
+		// Print PDOException message
+		echo $e->getMessage();
+		}  
 	}
-	catch(PDOException $e) {
-	// Print PDOException message
-	echo $e->getMessage();
-	}  
+	else{
+		//we are going to be redirected directly to the change of password again
+		$_SESSION['change_again_pwd'] = true;
+		header('Location: userorientation.php');
+		Exit;
+	}
 	
 
 

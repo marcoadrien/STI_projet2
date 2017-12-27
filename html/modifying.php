@@ -17,7 +17,7 @@ if(empty($_POST['modify_steptwo'])) {
 //otherwise we modify the account
 else{
 	//if an input is missing, we redirect to the form
-	if(empty($_POST['pwd_field']) || (($_POST['activity_field'] != "actif" )&& ($_POST['activity_field'] != "inactif")) || (($_POST['role_field'] != "admin" )&& ($_POST['role_field'] != "user"))){
+	if(empty($_POST['pwd_field']) || empty($_POST['new_login_field']) || (($_POST['activity_field'] != "actif" )&& ($_POST['activity_field'] != "inactif")) || (($_POST['role_field'] != "admin" )&& ($_POST['role_field'] != "user"))){
 		
 		//notice that we redirect always to the step one, that must be better
 		$_SESSION['get_id_to_modify_again'] = true;
@@ -33,6 +33,7 @@ else{
 		$_POST['pwd_field'] = strip_tags($_POST['pwd_field']);
 		$_POST['activity_field'] = strip_tags($_POST['activity_field']);
 		$_POST['login_field'] = strip_tags($_POST['login_field']);
+		$_POST['new_login_field'] = strip_tags($_POST['new_login_field']);
 
 
 		//if the password is fine, we modify the account		
@@ -61,8 +62,8 @@ else{
 				$_POST['pwd_field'] = hash('sha256', $_POST['pwd_field']);
 
 				//prepared statement against sql injections
-				$result = $file_db->prepare('UPDATE personnes SET admin = :role_field, mdp = :pwd_field, actif = :activity_field WHERE login = :login_field');
-				$result->execute(array('role_field' => $_POST['role_field'], 'pwd_field' => $_POST['pwd_field'], 'activity_field' => $_POST['activity_field'], 'login_field' => $_SESSION['login_field']));
+				$result = $file_db->prepare('UPDATE personnes SET login = :new_login_field, admin = :role_field, mdp = :pwd_field, actif = :activity_field WHERE login = :login_field');
+				$result->execute(array('new_login_field' => $_POST['new_login_field'], 'role_field' => $_POST['role_field'], 'pwd_field' => $_POST['pwd_field'], 'activity_field' => $_POST['activity_field'], 'login_field' => $_SESSION['login_field']));
 			
 				//$file_db->exec("UPDATE personnes SET admin = '{$_POST['role_field']}', mdp = '{$_POST['pwd_field']}', actif = '{$_POST['activity_field']}' WHERE login ='{$_SESSION['login_field']}'");
 

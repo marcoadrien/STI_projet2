@@ -4,7 +4,6 @@
 <body>
 <h1>GESTION DES COMPTES</h1>
 <br/>
-<h2>COMPTES EXISTANTS:</h2>
 <?php
 session_start();
 
@@ -14,56 +13,7 @@ if(empty($_POST['account_gestion'])) {
 	header('Location: index.php');
 	Exit;
 }
-else{
 
-	// Set default timezone
-	date_default_timezone_set('UTC');
-	 
-	try {
-	    /**************************************
-	    * Create databases and                *
-	    * open connections                    *
-	    **************************************/
-	 
-	    // Create (connect to) SQLite database in file
-	    $file_db = new PDO('sqlite:/var/www/databases/database.sqlite');
-	    // Set errormode to exceptions
-	    $file_db->setAttribute(PDO::ATTR_ERRMODE, 
-		                    PDO::ERRMODE_EXCEPTION); 
-	 
-	    
-	 
-	   
-	 
-	    /**************************************
-	    * show tables to debug                *
-	    **************************************/
-	 
-
-	    $result =  $file_db->query('SELECT * FROM personnes');
-	
-	    foreach($result as $row) {
-	      echo "Login: " . $row['login'] . "<br/>";
-	      echo "Rôle: " . $row['admin'] . "<br/>";
-	      echo "Mdp: " . $row['mdp'] . "<br/>";
-	      echo "Validité: " . $row['actif'] . "<br/>";
-	      echo "<br/>";
-	    }
-
-
-	 
-	    /**************************************
-	    * Close db connections                *
-	    **************************************/
-	 
-	    // Close file db connection
-	    $file_db = null;
-	}
-	catch(PDOException $e) {
-		// Print PDOException message
-		echo $e->getMessage();
-	}
-}
 ?>
 
 <form method="post" action="delete_account.php">
