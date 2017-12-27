@@ -13,7 +13,7 @@ session_start();
 if($_SESSION['change_again_pwd']){
 	//we reset the value and stay on this page
 	$_SESSION['change_again_pwd'] = false;
-	echo "Il faut remplir tous les champs et mettre le bon ancien mot de passe!";
+	echo "Il faut remplir tous les champs et mettre le bon ancien mot de passe! Mettre aussi un nouveau mot de passe de 8 caractères minimum avec majuscules ou minuscules et des chiffres.";
 }
 elseif(empty($_POST['change_pwd'])) {
 	//redirection, not allowed to be on this page
