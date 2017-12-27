@@ -34,3 +34,5 @@
 
 - essayer d enlever l id des messages dans l url
 -passer a HTTPS au lie de HTTP!!!! sauf qu'il faut payer un certificat en pratique je crois...
+
+- instaurer l'obligation de changer les mots de passe tous les temps de temps
