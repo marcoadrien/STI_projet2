@@ -10,7 +10,7 @@ session_start();
 
 
 //if someone try to access directly this page without logging (it means there are empty datas), we redirect
-if(empty($_GET['id_message'])) {
+if(empty($_POST['id_message'])) {
 
 	if($_SESSION['loggedin']){
 		header('Location: userorientation.php');
@@ -27,10 +27,10 @@ if(empty($_GET['id_message'])) {
 
 
 //we remove all the special characters to prevent from script injections
-$_GET['id_message'] = strip_tags($_GET['id_message']);
+$_POST['id_message'] = strip_tags($_POST['id_message']);
 
 //we get the message id to display
-$_SESSION['idmsg'] = $_GET['id_message'];
+$_SESSION['idmsg'] = $_POST['id_message'];
 $id = $_SESSION['idmsg'];
 
 

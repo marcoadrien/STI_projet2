@@ -1,15 +1,22 @@
 <html>
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="function.js"></script>
 <script>
 //this script gets the name of the clicked button (that corresponds to the id message)
 //and send it to the detail.php page by the get method
 $(document).ready(function(){
     $(".selecter").click(function(){
 	var id_message = $(this).attr("name");
-	$(location).attr('href', '/detail.php?id_message='+id_message);
+	 Send_PostData_ToUrl(
+		'/detail.php/', 
+		{id_message: id_message}
+         );
+	//$(location).attr('href', '/detail.php?id_message='+id_message);
     });
 });
+
+
 </script>
 </head>
 <body>
