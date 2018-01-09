@@ -94,15 +94,15 @@ catch(PDOException $e) {
 ?>
 
 
-<form method="post" action="answer_message.php">
+<form method="post" action="/answer_message.php">
 <input type="submit" name="answer_message" value="répondre au message"/>
 </form>
 
-<form method="post" action="delete_message.php">
+<form method="post" action="/delete_message.php">
 <input type="submit" name="delete_message" value="supprimer message"/>
 </form>
 
-<form method="post" action="userorientation.php">
+<form method="post" action="/userorientation.php">
 <input type="submit" name="retour" value="retour"/>
 </form>
 
